@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Join FitFlex as a certified trainer.">
+  <title>Become a Trainer | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-portal="trainer">
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="card form-card wide reveal">
+          <div class="text-center mb-2">
+            <h1 style="font-size: 1.8rem;">Become a FitFlex trainer</h1>
+            <p class="muted">Coach clients online, run group classes and share your plans.</p>
+          </div>
+          <form id="register-form" novalidate>
+            <fieldset>
+              <legend>Account</legend>
+              <div class="form-group">
+                <label for="fullName">Full name <span class="req">*</span></label>
+                <input id="fullName" name="fullName" required maxlength="100" autocomplete="name">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email <span class="req">*</span></label>
+                  <input type="email" id="email" name="email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" name="phone" autocomplete="tel">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="password">Password <span class="req">*</span></label>
+                  <input type="password" id="password" name="password" required data-validate="password" autocomplete="new-password">
+                  <div class="form-hint">At least 8 characters, including a number</div>
+                </div>
+                <div class="form-group">
+                  <label for="confirmPassword">Confirm password <span class="req">*</span></label>
+                  <input type="password" id="confirmPassword" name="confirmPassword" required data-match="password" autocomplete="new-password">
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Professional profile</legend>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="specialization">Specialization <span class="req">*</span></label>
+                  <select id="specialization" name="specialization" required><option value="">Select...</option><option value="Strength">Strength</option>
+    <option value="Yoga">Yoga</option>
+    <option value="Weight Loss">Weight Loss</option>
+    <option value="Cardio">Cardio</option>
+    <option value="Zumba">Zumba</option>
+    <option value="CrossFit">CrossFit</option>
+    <option value="Pilates">Pilates</option>
+    <option value="Nutrition">Nutrition</option></select>
+                </div>
+                <div class="form-group">
+                  <label for="experienceYears">Experience (years) <span class="req">*</span></label>
+                  <input type="number" id="experienceYears" name="experienceYears" required min="0" max="60">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pricePerSession">Price per session (₹) <span class="req">*</span></label>
+                  <input type="number" id="pricePerSession" name="pricePerSession" required data-validate="positive" step="1" placeholder="699">
+                </div>
+                <div class="form-group">
+                  <label for="profileImageUrl">Profile photo URL</label>
+                  <input type="url" id="profileImageUrl" name="profileImageUrl" placeholder="https://...">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="certifications">Certifications</label>
+                <input id="certifications" name="certifications" maxlength="500" placeholder="e.g. ACE CPT, RYT-200">
+              </div>
+              <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio" maxlength="2000" placeholder="Tell clients about your coaching style"></textarea>
+              </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="fa-solid fa-id-badge"></i> Create trainer account</button>
+          </form>
+          <p class="form-footer">Already registered? <a href="trainer-login.html">Trainer login</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/register.js"></script>
+</body>
+</html>

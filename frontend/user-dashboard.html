@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your FitFlex dashboard.">
+  <title>My Dashboard | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <div><h1 id="welcome">Welcome back</h1><p>Here is your fitness at a glance.</p></div>
+        <div class="btn-group">
+          <a href="trainers.html" class="btn btn-primary"><i class="fa-solid fa-calendar-plus"></i> Book a session</a>
+          <a href="progress.html" class="btn btn-outline"><i class="fa-solid fa-plus"></i> Log workout</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div id="stats" class="grid grid-4 mb-2"></div>
+
+      <div class="grid grid-2 mt-3">
+        <div class="card">
+          <div class="card-header"><h2><i class="fa-solid fa-video accent"></i> Upcoming sessions</h2><a href="sessions.html" class="small">All sessions</a></div>
+          <div id="upcoming-sessions"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2><i class="fa-solid fa-bowl-food accent"></i> Latest diet plan</h2><a href="nutrition.html" class="small">Nutrition</a></div>
+          <div id="diet-summary"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-2 mt-3">
+        <div class="card">
+          <div class="card-header"><h2><i class="fa-solid fa-dumbbell accent"></i> My workout plans</h2></div>
+          <div id="workout-plans"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2><i class="fa-solid fa-folder-open accent"></i> Resources from my trainers</h2></div>
+          <div id="resources"></div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-header"><h2><i class="fa-solid fa-link accent"></i> Quick links</h2></div>
+        <div class="btn-group">
+          <a href="trainers.html" class="btn btn-ghost"><i class="fa-solid fa-users"></i> Find trainers</a>
+          <a href="sessions.html" class="btn btn-ghost"><i class="fa-solid fa-people-group"></i> Group classes</a>
+          <a href="nutrition.html" class="btn btn-ghost"><i class="fa-solid fa-apple-whole"></i> New diet plan</a>
+          <a href="progress.html" class="btn btn-ghost"><i class="fa-solid fa-chart-line"></i> Progress charts</a>
+          <a href="gyms.html" class="btn btn-ghost"><i class="fa-solid fa-location-dot"></i> Gyms near me</a>
+          <a href="pose.html" class="btn btn-ghost"><i class="fa-solid fa-person-rays"></i> Pose detection</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/user-dashboard.js"></script>
+</body>
+</html>

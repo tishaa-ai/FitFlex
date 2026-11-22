@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FitFlex connects you with certified trainers for online sessions, diet plans, gym finder and AI pose detection.">
+  <title>Train Smarter | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Your online fitness partner</span>
+          <h1>Train with certified coaches, <span>anywhere.</span></h1>
+          <p class="lead">Book one-on-one or group sessions over video, get a diet plan built for your body,
+            find gyms near you and let AI check your squat form in real time.</p>
+          <div class="btn-group">
+            <a href="register.html" class="btn btn-primary btn-lg"><i class="fa-solid fa-user-plus"></i> Join as User</a>
+            <a href="trainer-register.html" class="btn btn-outline btn-lg"><i class="fa-solid fa-id-badge"></i> Join as Trainer</a>
+          </div>
+          <div class="hero-stats">
+            <div><strong>5+</strong><span>Specializations</span></div>
+            <div><strong>24/7</strong><span>Access to plans</span></div>
+            <div><strong>33</strong><span>Body points tracked by AI</span></div>
+          </div>
+        </div>
+        <div class="hero-visual reveal" aria-hidden="true">
+          <div class="mini-stat"><i class="fa-solid fa-video"></i><div><strong>Live session at 7:00 AM</strong><div class="muted small">Strength basics with your coach</div></div></div>
+          <div class="mini-stat"><i class="fa-solid fa-person-running"></i><div><strong>Squats: 20 reps</strong><div class="muted small">Correct posture 92% of the time</div></div></div>
+          <div class="mini-stat"><i class="fa-solid fa-bowl-food"></i><div><strong>2,187 kcal plan</strong><div class="muted small">Vegetarian, 4 meals a day</div></div></div>
+          <div class="mini-stat mb-0"><i class="fa-solid fa-fire"></i><div><strong>8-day streak</strong><div class="muted small">Keep it going!</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title reveal">
+          <span class="eyebrow">Features</span>
+          <h2>Everything you need to get fit</h2>
+          <p class="muted">One platform for coaching, food, workouts and tracking.</p>
+        </div>
+        <div class="grid grid-auto">
+          <a href="trainers.html" class="card card-hover reveal"><div class="card-icon"><i class="fa-solid fa-video"></i></div>
+            <h3>Online Training</h3><p class="muted mb-0">Book one-on-one coaching or join group classes with certified trainers via Jitsi video.</p></a>
+          <a href="pose.html" class="card card-hover reveal"><div class="card-icon"><i class="fa-solid fa-person-rays"></i></div>
+            <h3>Pose Detection</h3><p class="muted mb-0">Computer vision counts your reps and warns you about wrong posture in real time.</p></a>
+          <a href="nutrition.html" class="card card-hover reveal"><div class="card-icon"><i class="fa-solid fa-apple-whole"></i></div>
+            <h3>Nutrition Plans</h3><p class="muted mb-0">Diet plans calculated from your BMR and goal, with Indian-friendly meals.</p></a>
+          <a href="gyms.html" class="card card-hover reveal"><div class="card-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <h3>Gym Locator</h3><p class="muted mb-0">Find gyms around you on a map, with distance and directions.</p></a>
+          <a href="progress.html" class="card card-hover reveal"><div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <h3>Progress Tracking</h3><p class="muted mb-0">Log workouts and weight, see your streak and charts of how far you have come.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-title reveal">
+          <span class="eyebrow">How it works</span>
+          <h2>Start in four simple steps</h2>
+        </div>
+        <div class="grid grid-4">
+          <div class="step reveal"><div class="step-number">1</div><h3>Create your profile</h3><p class="muted">Tell us your goal, fitness level and body measurements.</p></div>
+          <div class="step reveal"><div class="step-number">2</div><h3>Pick a trainer</h3><p class="muted">Filter by specialization, experience and price.</p></div>
+          <div class="step reveal"><div class="step-number">3</div><h3>Train online</h3><p class="muted">Join the video session when your trainer confirms.</p></div>
+          <div class="step reveal"><div class="step-number">4</div><h3>Track and improve</h3><p class="muted">Follow your diet and workout plans and watch the charts move.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="row-between mb-2 reveal">
+          <div><span class="eyebrow">Coaches</span><h2 class="mb-0">Featured trainers</h2></div>
+          <a href="trainers.html" class="btn btn-outline">View all trainers <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div id="featured-trainers" class="grid grid-3"></div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-title reveal">
+          <span class="eyebrow">Stories</span>
+          <h2>What our members say</h2>
+          <p class="muted small">Sample testimonials with fictional names, for demonstration.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card reveal"><p>"The squat counter caught my knees caving in. Two weeks later my form is finally right."</p>
+            <div class="row"><div class="avatar avatar-sm">AK</div><div><strong>Aman K. (fictional)</strong><div class="muted small">Pune</div></div></div></div>
+          <div class="card reveal"><p>"Morning yoga with my trainer before work, and a vegetarian diet plan that actually fits my routine."</p>
+            <div class="row"><div class="avatar avatar-sm">NS</div><div><strong>Neha S. (fictional)</strong><div class="muted small">Nagpur</div></div></div></div>
+          <div class="card reveal"><p>"I lost 6 kg in three months. Seeing the weight chart go down every week kept me motivated."</p>
+            <div class="row"><div class="avatar avatar-sm">RP</div><div><strong>Rakesh P. (fictional)</strong><div class="muted small">Bengaluru</div></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-band reveal">
+          <div><h2>Ready to start your fitness journey?</h2><p>Create a free account in less than a minute.</p></div>
+          <div class="btn-group">
+            <a href="register.html" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="trainer-register.html" class="btn btn-outline btn-lg">I am a Trainer</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/home.js"></script>
+</body>
+</html>

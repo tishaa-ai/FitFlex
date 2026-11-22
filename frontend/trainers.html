@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse and filter FitFlex certified trainers.">
+  <title>Find a Trainer | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <div><h1>Find your trainer</h1><p>Certified coaches for strength, yoga, weight loss and more.</p></div>
+      </div>
+    </section>
+
+    <div class="container">
+      <form id="filter-form" class="card mb-2" novalidate>
+        <div class="grid grid-4">
+          <div class="form-group mb-0"><label for="search">Search by name</label>
+            <div class="input-icon"><i class="fa-solid fa-magnifying-glass"></i><input id="search" name="search" placeholder="e.g. Priya"></div></div>
+          <div class="form-group mb-0"><label for="specialization">Specialization</label>
+            <select id="specialization" name="specialization"><option value="">All</option><option value="Strength">Strength</option>
+    <option value="Yoga">Yoga</option>
+    <option value="Weight Loss">Weight Loss</option>
+    <option value="Cardio">Cardio</option>
+    <option value="Zumba">Zumba</option>
+    <option value="CrossFit">CrossFit</option>
+    <option value="Pilates">Pilates</option>
+    <option value="Nutrition">Nutrition</option></select></div>
+          <div class="form-group mb-0"><label for="minExperience">Min. experience</label>
+            <select id="minExperience" name="minExperience"><option value="">Any</option><option value="2">2+ years</option><option value="5">5+ years</option><option value="8">8+ years</option></select></div>
+          <div class="form-group mb-0"><label for="maxPrice">Max price per session</label>
+            <select id="maxPrice" name="maxPrice"><option value="">Any</option><option value="500">Up to ₹500</option><option value="700">Up to ₹700</option><option value="1000">Up to ₹1000</option></select></div>
+        </div>
+        <div class="row-between mt-2">
+          <span id="result-count" class="muted small"></span>
+          <button type="reset" class="btn btn-ghost btn-sm"><i class="fa-solid fa-rotate-left"></i> Clear filters</button>
+        </div>
+      </form>
+      <div id="trainer-list" class="grid grid-3"></div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/trainers.js"></script>
+</body>
+</html>

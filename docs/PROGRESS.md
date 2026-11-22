@@ -200,3 +200,51 @@ mocks in Phase 7, and to try them for real you add the keys to `backend/.env`.
 - `GET /api/gym/nearby` and `/search-food` return a small wrapper `{source, message, items/gyms}`
   instead of a bare list, so the UI can show where the data came from.
 - Gender `OTHER` uses the average of the male/female constants (−78) in Mifflin-St Jeor.
+
+---
+
+## Phase 5: Frontend (2026-11-22)
+
+**Built**
+
+- `css/style.css`: one shared theme. CSS variables (dark charcoal + lime accent), Poppins, responsive
+  grid, cards, forms, badges, tabs, tables, toasts, spinners, empty states, fade-in on scroll
+  (`.reveal`), hamburger menu under 960 px, and `prefers-reduced-motion` support.
+- `js/config.example.js` (copy it to the gitignored `config.js`), `js/api.js` (fetch wrapper: JWT
+  header, JSON, `ApiError` with field errors, 401 → clear session + redirect, authenticated file
+  download through a Blob), `js/auth.js` (session in localStorage, JWT expiry check,
+  `requireRole()` route guard, role-based navbar, footer, flash messages), `js/ui.js` (escaping
+  against XSS, toasts, loaders, attribute-based form validation, formatting, shared trainer card,
+  workout plan and session renderers).
+- 16 pages, each with its own script in `js/pages/`: index, login, register, trainer-login,
+  trainer-register, user-dashboard, trainer-dashboard (tabs: overview, clients, availability, group
+  session, workout plan builder with dynamic rows, resources upload, profile), trainers, trainer-profile
+  (availability table + booking form with slot hints), sessions (upcoming/past/group tabs,
+  role-based actions, Jitsi join), nutrition (BMR/TDEE/target, meal cards, totals, Chart.js macro
+  doughnut, food search, history), gyms (Leaflet + OSM tiles, or Google Maps when a browser key is
+  set; geolocation → city → lat/lng fallback, default Nagpur), progress (3 Chart.js charts + table),
+  pose, about, contact.
+
+**Verified in headless Chrome** (DevTools protocol scripts kept outside the repo):
+
+- Console check: all 16 pages × 3 roles (guest, USER, TRAINER) = 48 page loads with **0 JS exceptions,
+  0 console errors and 0 failed requests**. Route guards send guests to the right login page and send
+  the wrong role to its own dashboard.
+- 21 click-through flows, all passing: client-side validation; register → dashboard; logout; login
+  with the demo button; wrong-password toast; diet plan with chart; food search; booking inside and
+  outside availability; progress log with 3 charts; trainer login; trainer confirms → Jitsi link; add
+  and delete an availability slot; workout plan with 3 dynamic rows; file upload; group session
+  creation; user sees Join Session and joins the group class; the user dashboard shows the plan and
+  the file downloads; contact form; mobile hamburger menu at 390 px with no horizontal scroll.
+- Screenshots were checked by eye. One bug fixed: the logo rendered as "Fit Flex" because of the
+  flex gap.
+
+**Decisions**
+
+- The navbar and footer are rendered by `auth.js` into `<header id="navbar">` / `<footer id="footer">`,
+  so the 16 pages don't repeat that markup.
+- Plain `<script>` files with global `api` / `auth` / `ui` objects (no modules, no build step), so
+  it is easy to read and runs on Live Server.
+- `login.js` and `register.js` serve both portals and use `<body data-portal="user|trainer">` to tell them apart.
+- After login, users go back to the page that sent them to login (`?redirect=`, same-site `.html` pages only).
+- Testimonials are labelled as fictional, as the spec asks.

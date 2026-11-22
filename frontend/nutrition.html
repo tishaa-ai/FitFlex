@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate a personalised diet plan.">
+  <title>Nutrition | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <div><h1>Nutrition planner</h1><p>A one-day meal plan based on your BMR, activity and goal.</p></div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="layout-sidebar">
+        <div>
+          <div id="plan-result">
+            <div class="card"><div class="empty-state"><i class="fa-solid fa-bowl-food"></i><p>Choose your preferences and click <strong>Generate plan</strong> to see your meals for the day.</p></div></div>
+          </div>
+        </div>
+
+        <aside class="stack">
+          <div class="card">
+            <h3><i class="fa-solid fa-wand-magic-sparkles accent"></i> Generate a plan</h3>
+            <form id="diet-form" novalidate>
+              <div class="form-group"><label for="goal">Goal</label>
+                <select id="goal" name="goal">
+    <option value="">Use my profile goal</option>
+    <option value="WEIGHT_LOSS">Weight loss</option>
+    <option value="MUSCLE_GAIN">Muscle gain</option>
+    <option value="MAINTENANCE">Maintenance</option></select></div>
+              <div class="form-group"><label for="dietType">Diet type <span class="req">*</span></label>
+                <select id="dietType" name="dietType" required>
+                  <option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option>
+                  <option value="eggetarian">Eggetarian</option><option value="non-veg">Non-vegetarian</option>
+                </select></div>
+              <div class="form-group"><label for="mealsPerDay">Meals per day</label>
+                <select id="mealsPerDay" name="mealsPerDay">
+                  <option value="3">3 (breakfast, lunch, dinner)</option><option value="4">4 (+ evening snack)</option><option value="5">5 (+ two snacks)</option>
+                </select></div>
+              <button class="btn btn-primary btn-block" type="submit"><i class="fa-solid fa-bolt"></i> Generate plan</button>
+            </form>
+            <p class="form-hint mt-2">Uses your profile's age, gender, height, weight and activity level. <a href="#" id="show-profile">See my details</a></p>
+            <div id="profile-box" class="hidden"></div>
+          </div>
+
+          <div class="card">
+            <h3><i class="fa-solid fa-magnifying-glass accent"></i> Food search</h3>
+            <form id="food-form" class="row" novalidate>
+              <input id="food-query" name="query" placeholder="e.g. paneer, banana" minlength="2" style="flex:1; min-width: 140px;">
+              <button class="btn btn-ghost" type="submit">Search</button>
+            </form>
+            <div id="food-results" class="mt-2"></div>
+          </div>
+
+          <div class="card">
+            <h3><i class="fa-solid fa-clock-rotate-left accent"></i> Plan history</h3>
+            <div id="history"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/nutrition.js"></script>
+</body>
+</html>

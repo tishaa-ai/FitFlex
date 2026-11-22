@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Find gyms and fitness centres near you.">
+  <title>Gyms Near Me | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <div><h1>Gyms near you</h1><p id="source-note">Find fitness centres around your location.</p></div>
+      </div>
+    </section>
+
+    <div class="container">
+      <form id="location-form" class="card mb-2" novalidate>
+        <div class="grid grid-4">
+          <div class="form-group mb-0"><label for="city">City</label>
+            <select id="city" name="city">
+              <option value="">Custom location...</option>
+              <option value="21.1458,79.0882" selected>Nagpur</option>
+              <option value="19.0760,72.8777">Mumbai</option>
+              <option value="18.5204,73.8567">Pune</option>
+              <option value="28.6139,77.2090">New Delhi</option>
+              <option value="12.9716,77.5946">Bengaluru</option>
+              <option value="17.3850,78.4867">Hyderabad</option>
+              <option value="13.0827,80.2707">Chennai</option>
+              <option value="22.5726,88.3639">Kolkata</option>
+            </select></div>
+          <div class="form-group mb-0"><label for="lat">Latitude</label><input type="number" id="lat" name="lat" step="any" value="21.1458" required min="-90" max="90"></div>
+          <div class="form-group mb-0"><label for="lng">Longitude</label><input type="number" id="lng" name="lng" step="any" value="79.0882" required min="-180" max="180"></div>
+          <div class="form-group mb-0"><label for="radius">Radius</label>
+            <select id="radius" name="radius"><option value="2000">2 km</option><option value="3000" selected>3 km</option><option value="5000">5 km</option><option value="10000">10 km</option></select></div>
+        </div>
+        <div class="btn-group mt-2">
+          <button type="button" class="btn btn-outline" id="locate-btn"><i class="fa-solid fa-location-crosshairs"></i> Use my location</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass-location"></i> Search gyms</button>
+        </div>
+      </form>
+
+      <div class="layout-sidebar">
+        <div id="map" class="map" role="region" aria-label="Map of nearby gyms"></div>
+        <div class="card">
+          <div class="card-header"><h3 id="gym-count">Gyms</h3></div>
+          <div id="gym-list" class="gym-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/gyms.js"></script>
+</body>
+</html>

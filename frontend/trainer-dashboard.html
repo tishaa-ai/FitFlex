@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your FitFlex clients, sessions and resources.">
+  <title>Trainer Dashboard | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <div><h1 id="welcome">Trainer dashboard</h1><p id="welcome-sub">Manage your sessions, clients and content.</p></div>
+        <a href="sessions.html" class="btn btn-outline"><i class="fa-solid fa-calendar-days"></i> All sessions</a>
+      </div>
+    </section>
+
+    <div class="container">
+      <div id="stats" class="grid grid-4 mb-2"></div>
+
+      <div id="dashboard-tabs" class="mt-3">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="tab-overview"><i class="fa-solid fa-gauge"></i> Overview</button>
+          <button class="tab" data-tab="tab-clients"><i class="fa-solid fa-users"></i> Clients</button>
+          <button class="tab" data-tab="tab-availability"><i class="fa-solid fa-clock"></i> Availability</button>
+          <button class="tab" data-tab="tab-group"><i class="fa-solid fa-people-group"></i> Group session</button>
+          <button class="tab" data-tab="tab-plans"><i class="fa-solid fa-dumbbell"></i> Workout plans</button>
+          <button class="tab" data-tab="tab-resources"><i class="fa-solid fa-upload"></i> Resources</button>
+          <button class="tab" data-tab="tab-profile"><i class="fa-solid fa-user-pen"></i> Profile</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-overview">
+          <div class="grid grid-2">
+            <div class="card">
+              <div class="card-header"><h2><i class="fa-solid fa-bell accent"></i> Booking requests</h2></div>
+              <div id="pending-requests"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h2><i class="fa-solid fa-video accent"></i> Upcoming confirmed sessions</h2></div>
+              <div id="upcoming-sessions"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-clients">
+          <div class="card">
+            <div class="card-header"><h2>My clients</h2><span class="muted small">Users who booked you or joined your group classes</span></div>
+            <div id="clients"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-availability">
+          <div class="layout-sidebar">
+            <div class="card">
+              <div class="card-header"><h2>Weekly availability</h2></div>
+              <p class="muted small">Users can only book one-on-one sessions inside these time windows.</p>
+              <div id="availability-list"></div>
+            </div>
+            <div class="card">
+              <h3>Add a time slot</h3>
+              <form id="availability-form" novalidate>
+                <div class="form-group"><label for="av-day">Day <span class="req">*</span></label>
+                  <select id="av-day" name="dayOfWeek" required><option value="MONDAY">Monday</option>
+    <option value="TUESDAY">Tuesday</option>
+    <option value="WEDNESDAY">Wednesday</option>
+    <option value="THURSDAY">Thursday</option>
+    <option value="FRIDAY">Friday</option>
+    <option value="SATURDAY">Saturday</option>
+    <option value="SUNDAY">Sunday</option></select></div>
+                <div class="form-row">
+                  <div class="form-group"><label for="av-start">From <span class="req">*</span></label><input type="time" id="av-start" name="startTime" required value="07:00"></div>
+                  <div class="form-group"><label for="av-end">To <span class="req">*</span></label><input type="time" id="av-end" name="endTime" required value="10:00"></div>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit"><i class="fa-solid fa-plus"></i> Add slot</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-group">
+          <div class="card form-card wide">
+            <h2>Create a group session</h2>
+            <p class="muted">Group classes are confirmed immediately and get a Jitsi video link. Users can join until it is full.</p>
+            <form id="group-form" novalidate>
+              <div class="form-group"><label for="g-title">Title <span class="req">*</span></label><input id="g-title" name="title" required maxlength="150" placeholder="e.g. Morning HIIT Blast"></div>
+              <div class="form-group"><label for="g-desc">Description</label><textarea id="g-desc" name="description" maxlength="1000" placeholder="What should participants expect or bring?"></textarea></div>
+              <div class="form-row-3">
+                <div class="form-group"><label for="g-when">Date and time <span class="req">*</span></label><input type="datetime-local" id="g-when" name="scheduledAt" required></div>
+                <div class="form-group"><label for="g-duration">Duration (min) <span class="req">*</span></label><input type="number" id="g-duration" name="durationMinutes" required min="15" max="180" value="45"></div>
+                <div class="form-group"><label for="g-max">Max participants <span class="req">*</span></label><input type="number" id="g-max" name="maxParticipants" required min="2" max="100" value="15"></div>
+              </div>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-people-group"></i> Create group session</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-plans">
+          <div class="card">
+            <h2>Create a workout plan</h2>
+            <form id="plan-form" novalidate>
+              <div class="form-row">
+                <div class="form-group"><label for="p-client">Client <span class="req">*</span></label><select id="p-client" name="userId" required><option value="">Select a client...</option></select></div>
+                <div class="form-group"><label for="p-title">Plan title <span class="req">*</span></label><input id="p-title" name="title" required maxlength="150" placeholder="e.g. 4-week fat loss"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label for="p-goal">Goal</label><input id="p-goal" name="goal" maxlength="100" placeholder="e.g. Strength and fat loss"></div>
+                <div class="form-group"><label for="p-weeks">Duration (weeks) <span class="req">*</span></label><input type="number" id="p-weeks" name="durationWeeks" required min="1" max="52" value="4"></div>
+              </div>
+              <h3 class="mt-2">Exercises</h3>
+              <div class="exercise-row muted small" aria-hidden="true"><span>Exercise</span><span>Sets</span><span>Reps</span><span>Rest (s)</span><span>Day</span><span>Notes</span><span></span></div>
+              <div id="exercise-rows"></div>
+              <div class="btn-group mt-2">
+                <button type="button" class="btn btn-ghost" id="add-exercise"><i class="fa-solid fa-plus"></i> Add exercise</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save plan</button>
+              </div>
+            </form>
+          </div>
+          <div class="card mt-3">
+            <div class="card-header"><h2>Plans I created</h2></div>
+            <div id="plans-list"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-resources">
+          <div class="layout-sidebar">
+            <div class="card">
+              <div class="card-header"><h2>Uploaded files</h2></div>
+              <div id="resources-list"></div>
+            </div>
+            <div class="card">
+              <h3>Upload a resource</h3>
+              <form id="upload-form" novalidate>
+                <div class="form-group"><label for="r-title">Title <span class="req">*</span></label><input id="r-title" name="title" required maxlength="150"></div>
+                <div class="form-group"><label for="r-type">Type</label>
+                  <select id="r-type" name="type"><option value="DOCUMENT">Document</option><option value="VIDEO">Video</option><option value="PLAN">Plan</option></select></div>
+                <div class="form-group"><label for="r-user">Share with</label>
+                  <select id="r-user" name="userId"><option value="">All my clients</option></select></div>
+                <div class="form-group"><label for="r-file">File <span class="req">*</span></label>
+                  <input type="file" id="r-file" name="file" accept=".mp4,.pdf,.docx,.jpg,.jpeg,.png">
+                  <div class="form-hint">mp4, pdf, docx, jpg or png &middot; max 50 MB</div></div>
+                <button class="btn btn-primary btn-block" type="submit"><i class="fa-solid fa-upload"></i> Upload</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-profile">
+          <div class="card form-card wide">
+            <h2>My public profile</h2>
+            <form id="profile-form" novalidate>
+              <div class="form-row">
+                <div class="form-group"><label for="pf-name">Full name <span class="req">*</span></label><input id="pf-name" name="fullName" required maxlength="100"></div>
+                <div class="form-group"><label for="pf-phone">Phone</label><input type="tel" id="pf-phone" name="phone"></div>
+              </div>
+              <div class="form-row-3">
+                <div class="form-group"><label for="pf-spec">Specialization <span class="req">*</span></label><select id="pf-spec" name="specialization" required><option value="Strength">Strength</option>
+    <option value="Yoga">Yoga</option>
+    <option value="Weight Loss">Weight Loss</option>
+    <option value="Cardio">Cardio</option>
+    <option value="Zumba">Zumba</option>
+    <option value="CrossFit">CrossFit</option>
+    <option value="Pilates">Pilates</option>
+    <option value="Nutrition">Nutrition</option></select></div>
+                <div class="form-group"><label for="pf-exp">Experience (years) <span class="req">*</span></label><input type="number" id="pf-exp" name="experienceYears" required min="0" max="60"></div>
+                <div class="form-group"><label for="pf-price">Price (₹) <span class="req">*</span></label><input type="number" id="pf-price" name="pricePerSession" required data-validate="positive"></div>
+              </div>
+              <div class="form-group"><label for="pf-cert">Certifications</label><input id="pf-cert" name="certifications" maxlength="500"></div>
+              <div class="form-group"><label for="pf-img">Profile photo URL</label><input type="url" id="pf-img" name="profileImageUrl"></div>
+              <div class="form-group"><label for="pf-bio">Bio</label><textarea id="pf-bio" name="bio" maxlength="2000"></textarea></div>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save profile</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/trainer-dashboard.js"></script>
+</body>
+</html>

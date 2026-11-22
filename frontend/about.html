@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About the FitFlex project.">
+  <title>About | FitFlex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="navbar" class="navbar"></header>
+
+  <main>
+    <section class="page-header">
+      <div class="container"><div><h1>About FitFlex</h1><p>A final-year B.Tech major project in full-stack development and computer vision.</p></div></div>
+    </section>
+    <div class="container">
+      <div class="grid grid-2">
+        <div class="card reveal">
+          <h2>Our mission</h2>
+          <p>Good coaching should not depend on where you live. FitFlex connects people with certified trainers online,
+            builds diet plans from their own body numbers, and uses computer vision to give the kind of form feedback you
+            would normally only get from a coach standing next to you.</p>
+          <p class="mb-0">Users and trainers have separate portals. Trainers set their weekly availability, confirm bookings,
+            run group classes, write workout plans and share files with their clients.</p>
+        </div>
+        <div class="card reveal">
+          <h2>Technology</h2>
+          <ul class="list">
+            <li class="list-item"><span><i class="fa-brands fa-html5 accent"></i> Frontend</span><span class="muted">HTML5, CSS3, JavaScript, Chart.js, Leaflet</span></li>
+            <li class="list-item"><span><i class="fa-brands fa-java accent"></i> Backend</span><span class="muted">Java 17, Spring Boot, Spring Security + JWT, JPA</span></li>
+            <li class="list-item"><span><i class="fa-solid fa-database accent"></i> Database</span><span class="muted">MySQL 8 (H2 for quick runs)</span></li>
+            <li class="list-item"><span><i class="fa-brands fa-python accent"></i> Pose detection</span><span class="muted">Python, OpenCV, MediaPipe, NumPy</span></li>
+            <li class="list-item"><span><i class="fa-solid fa-plug accent"></i> APIs</span><span class="muted">Spoonacular, Google Places / OpenStreetMap, Jitsi Meet</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid grid-3 mt-3">
+        <div class="card reveal"><div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div><h3>Secure by design</h3><p class="muted mb-0">BCrypt-hashed passwords, stateless JWT login and role-based access for users and trainers.</p></div>
+        <div class="card reveal"><div class="card-icon"><i class="fa-solid fa-plug-circle-check"></i></div><h3>Works offline-first</h3><p class="muted mb-0">Every external API has a fallback, so diet plans and gym search work even without API keys.</p></div>
+        <div class="card reveal"><div class="card-icon"><i class="fa-solid fa-graduation-cap"></i></div><h3>Built to learn from</h3><p class="muted mb-0">Clean layered architecture: controllers, services, repositories and DTOs.</p></div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+  <div id="toast-container" aria-live="polite"></div>
+
+
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/about.js"></script>
+</body>
+</html>
