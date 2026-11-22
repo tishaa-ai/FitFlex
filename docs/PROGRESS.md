@@ -305,3 +305,50 @@ mocks in Phase 7, and to try them for real you add the keys to `backend/.env`.
   tell users to stand sideways.
 - Setup instructions use `uv` first: on this PC `py -3.11` doesn't find the uv-installed Python, and uv
   venvs have no `pip`. Installing from python.org with `py -3.11` is given as option B.
+
+---
+
+## Phase 7: Tests + Postman collection (2026-11-22)
+
+**Built**
+
+- `AuthServiceTest` (Mockito, 6 tests): duplicate email rejected (and nothing saved), the password is
+  stored hashed and the email normalised, wrong password rejected, unknown email gets the same message,
+  a trainer can't use the user portal, and a correct login returns the token.
+- `NutritionServiceTest` (11): BMR for a man (1673.75) and a woman (1320.25) checked against hand
+  calculations, TDEE, target calories for all 3 goals, the 1200 kcal floor; local fallback when no key
+  is set (Spoonacular never called); fallback when Spoonacular throws; Spoonacular meals plus local snack;
+  incomplete profile rejected; diet type parsing; food-search fallback.
+- `SessionServiceTest` (9): valid booking → REQUESTED with no link; **overlapping booking → 409**;
+  back-to-back booking allowed; **outside availability → 400** (the message lists the slots); day with no
+  slots; past time; trainer confirm → Jitsi link; user can't confirm; full group → 409.
+- `HelperLogicTest` (5): upload file-name sanitising (`../../`, `C:\fakepath\`, hidden files, long names),
+  haversine distance Nagpur–Mumbai ≈ 685 km, diet compatibility rules.
+- `ApiIntegrationTest` (MockMvc + H2 + seed data, 12): register → login (201/200, JWT has 3 parts);
+  duplicate email → 409; validation → 400 with field errors; wrong password → 401; trainer
+  register/login and portal separation; public `GET /api/trainers` with filters (and no contact details
+  shown); unknown trainer → 404; **protected endpoint without a token → 401** (also with a malformed token);
+  with a token → 200 and no password in the response; wrong role → 403; the full HTTP flow
+  book → clash 409 → confirm → Jitsi link; diet plan via the local fallback.
+- `docs/FitFlex.postman_collection.json`: 50 requests in 11 folders, with example bodies and test
+  scripts. The demo logins save `{{token}}` and `{{trainerToken}}`, and later requests save
+  `sessionId`, `groupSessionId`, `slotId`, `resourceId`. Booking and group times are computed by
+  pre-request scripts so they are always in the future.
+
+**Verified**
+
+- `mvnw.cmd test`: **44 tests, 0 failures**. `pytest`: **26 passed**.
+- Mutation check: disabling the clash rule and changing the BMR constant made 5 tests fail (unit and
+  integration), so the tests really do guard these rules. The code was restored from git afterwards.
+- Postman collection: Newman could not be installed here (npm installs are blocked in this
+  environment), so the collection was run with a small Node runner that uses the same request, variable
+  and test-script data: **50 requests, 60 assertions, 0 failures**, against the H2 backend. Postman's own
+  runner has not been tried; please run it once from Postman's Collection Runner.
+
+**Decisions**
+
+- Unit tests use Mockito with no Spring context (fast). Integration tests use `@SpringBootTest` +
+  `@AutoConfigureMockMvc` (Spring Boot 4 package: `org.springframework.boot.webmvc.test.autoconfigure`)
+  on the `h2` profile with the demo seed data. Uploads go to `target/test-uploads`.
+- The collection uses two token variables, `{{token}}` (user) and `{{trainerToken}}`, because the API has
+  two roles. The Trainer folder's auth is set to `{{trainerToken}}`.
