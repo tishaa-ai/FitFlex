@@ -248,3 +248,60 @@ mocks in Phase 7, and to try them for real you add the keys to `backend/.env`.
 - `login.js` and `register.js` serve both portals and use `<body data-portal="user|trainer">` to tell them apart.
 - After login, users go back to the page that sent them to login (`?redirect=`, same-site `.html` pages only).
 - Testimonials are labelled as fictional, as the spec asks.
+
+---
+
+## Phase 6: Pose detection (2026-11-22)
+
+**Built** (`pose-detection/`)
+
+- `pose_utils.py`: `calculate_angle(a, b, c)` with `atan2` (angle at b, folded into 0–180),
+  `landmark_to_pixel`, visibility helpers, `line_y_at` (used by the plank hip check) and `MovingAverage`.
+- `pose_detector.py`: webcam (`--source 0`) or video file. MediaPipe Pose with the skeleton drawn, and
+  one documented `CONFIG` dict for every threshold. `SquatTracker`, `BicepCurlTracker` and `PlankTracker`
+  are pure-logic state machines, so they can be tested. The overlay panel shows exercise, reps or hold time,
+  angles in "deg", Correct posture / Wrong posture!!, the reason and FPS. Keys s/b/p/r/q. It picks the
+  body side the camera sees best. On quit it prints a summary and, with `--upload` (`--email/--password`
+  or `--token`, `--api`), logs in and POSTs to `/api/progress/pose`. `--no-display` and `--max-frames`
+  are there for headless testing.
+- `pose_detection.ipynb`: imports → landmarks on a real photo → angle function with a worked example →
+  squat logic with a plot → bicep logic → live webcam cell (off by default) → algorithm comparison table
+  (labelled "from project report"). It was executed, and its outputs are saved.
+- `test_pose_utils.py` (12 tests, including the 90/180/45 deg cases from the spec) and
+  `test_pose_detector.py` (14 tests: reps, "Go lower", "Keep chest up", "Extend arm fully",
+  "Keep elbow close", plank timer, hips too low/high, side selection).
+- `requirements.txt` (pinned), `README.md` (Windows setup, run, upload, notebook, tests, troubleshooting,
+  image credits), and two CC BY 2.0 sample photos in `assets/`.
+
+**Verified**
+
+- Python **3.11.17** venv made with `uv`. Unpinned `pip install mediapipe` gives **1.2.3, which has no
+  `mp.solutions`** (the classic API was removed), and 0.10.30+ has no Windows wheels. So it is pinned to
+  **mediapipe 0.10.21** (+ numpy 1.26.4, opencv-contrib-python 4.11.0.86, protobuf 4.25.9), which is
+  verified to import and run `mp.solutions.pose`.
+- `pytest`: **26 passed**.
+- Real detection on a squat photo: 33 landmarks; left knee 90 deg (a real squat). Rendered the overlay
+  and checked it by eye.
+- End to end, headless: video → detector → summary → login → upload; the entry appears in
+  `/api/progress/my` as `POSE_DETECTION`. The `--token` upload works too. Wrong password, bad token,
+  missing video file and `--upload` without credentials all give clear messages instead of crashes.
+- Notebook executed with `jupyter nbconvert --execute`: 0 errors.
+- **Not verified here:** live webcam use. There is no camera on this machine, so please run
+  `python pose_detector.py` yourself.
+
+**Decisions**
+
+- The classic `mp.solutions.pose` API (matching the project report) was kept, on a pinned version,
+  instead of the newer Tasks API. The Tasks API would need a separate model-file download and more code
+  for the same result.
+- Model complexity 1, because that model ships inside the package. Complexity 2 downloads an extra
+  model at runtime.
+- Correct-form % = frames with correct posture ÷ frames where the body was visible. The frames of a
+  shallow (not counted) squat are counted as incorrect.
+- A rep is counted on the return to the start position (squat: up past 160 deg; curl: straight past 160 deg).
+- Plank uploads `reps = 0` and `durationSeconds` = time actually held in good form.
+- 2D limitation found while testing: in a front-facing photo the leg pointing at the camera reads 135 deg
+  while the other reads 90 deg. The README, the pose page and the program's startup message all
+  tell users to stand sideways.
+- Setup instructions use `uv` first: on this PC `py -3.11` doesn't find the uv-installed Python, and uv
+  venvs have no `pip`. Installing from python.org with `py -3.11` is given as option B.

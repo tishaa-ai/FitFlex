@@ -1,0 +1,22 @@
+# FitFlex pose detection - tested on Windows 11 with Python 3.11.17 (also has wheels for 3.10 and 3.12).
+#
+# Why these exact versions:
+#   mediapipe 0.10.21 is the last release that ships the classic `mp.solutions.pose` API
+#   (with the pose model built in). mediapipe 1.x removed `mp.solutions`, and 0.10.30+ has no
+#   Windows wheels for it, so do NOT upgrade mediapipe without changing the code.
+#   mediapipe 0.10.21 needs numpy < 2 and protobuf 4.x, and brings opencv-contrib-python.
+#   Do not also install `opencv-python`: two packages providing `cv2` conflict.
+
+mediapipe==0.10.21
+opencv-contrib-python==4.11.0.86
+numpy==1.26.4
+protobuf==4.25.9
+requests==2.34.2
+
+# tests
+pytest==9.2.0
+
+# teaching notebook (pose_detection.ipynb)
+notebook==7.6.5
+ipykernel==7.4.0
+matplotlib==3.11.2

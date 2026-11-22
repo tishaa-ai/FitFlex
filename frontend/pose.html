@@ -53,19 +53,21 @@
 
         <div class="card reveal">
           <h2>Run it on your computer</h2>
-          <p class="muted">The detector is a Python program in the <code>pose-detection/</code> folder (Python 3.11 or 3.12 recommended).</p>
+          <p class="muted">The detector is a Python program in the <code>pose-detection/</code> folder (Python 3.10, 3.11 or 3.12).</p>
           <pre><code>cd pose-detection
-    py -3.12 -m venv .venv
-    .venv\Scripts\activate
-    pip install -r requirements.txt
+uv venv --python 3.11 .venv
+uv pip install --python .venv -r requirements.txt
+.venv\Scripts\activate
 
-    # webcam, squats
-    python pose_detector.py --exercise squat
+# webcam, start with squats
+python pose_detector.py --exercise squat
 
-    # upload the session to your FitFlex progress when you quit
-    python pose_detector.py --upload --email user@fitflex.com --password User@1234</code></pre>
+# upload the session to your FitFlex progress when you quit
+python pose_detector.py --upload --email user@fitflex.com --password User@1234</code></pre>
+      <p class="form-hint">No <code>uv</code>? Install Python 3.11 from python.org, then use
+        <code>py -3.11 -m venv .venv</code> and <code>pip install -r requirements.txt</code>. Full steps are in <code>pose-detection/README.md</code>.</p>
           <p class="mb-0"><strong>Keys:</strong> <code>s</code> squat &middot; <code>b</code> bicep curl &middot; <code>p</code> plank &middot; <code>r</code> reset &middot; <code>q</code> quit</p>
-          <div class="alert alert-info mt-2 mb-0"><i class="fa-solid fa-lightbulb"></i><div>Stand 2-3 m from the camera in good light, with your whole body in the frame.</div></div>
+          <div class="alert alert-info mt-2 mb-0"><i class="fa-solid fa-lightbulb"></i><div>Stand <strong>sideways</strong> to the camera, 2-3 m away, in good light, with your whole body in the frame. Angles are measured in 2D, so a limb pointing at the camera looks straighter than it is.</div></div>
         </div>
       </div>
 
