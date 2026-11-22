@@ -72,3 +72,40 @@ the spec was ambiguous.
 - `DietPlan` stores `mealsPerDay` too, so the history list can show it.
 - `JWT_SECRET` has no hardcoded default: if it is empty, a random key is generated at startup
   (implemented in Phase 2).
+
+---
+
+## Phase 2: Security + auth (2026-11-22)
+
+**Built**
+
+- `security/`: `JwtUtil` (jjwt **0.13.0**, HS256, 24 h expiry), `JwtAuthFilter` (reads
+  `Authorization: Bearer`), `CustomUserDetailsService`, `UserPrincipal` (id + email + role of the
+  logged-in user), `RestAuthErrorHandler` (JSON 401/403 from inside the filter chain).
+- `config/SecurityConfig`: stateless, CSRF off, BCrypt, URL rules by role (public: register/login,
+  `GET /api/trainers/**`, `POST /api/contact`, `GET /api/gym/nearby`, H2 console). `@EnableMethodSecurity` on.
+- `config/CorsConfig`: origins from `CORS_ORIGINS` (default Live Server 5500 on localhost and 127.0.0.1).
+- `exception/`: `GlobalExceptionHandler` + `ResourceNotFound`/`BadRequest`/`Conflict`/`Unauthorized`/`Forbidden`
+  exceptions, all returning `{timestamp, status, message, errors}`.
+- `AuthService` (register user/trainer, login per portal), `UserService` (profile get/update),
+  `UserController` (`/api/user/register|login|profile`), `TrainerController` (`/api/trainer/add|login`).
+- `config/DataSeeder`: demo user, 5 trainers with weekly availability, 5 sessions
+  (confirmed/requested/completed one-on-ones + 2 group sessions), a 3-day workout plan,
+  28 days of progress (manual + pose detection entries).
+
+**Verified with curl (H2 profile)**: login returns a token; profile works with the token; 401
+without/with a bad token; 401 on wrong password; 401 when a trainer uses the user portal; 403 when
+a trainer calls a USER endpoint; 400 with per-field errors; 409 on duplicate email (case-insensitive);
+400 on invalid enum; CORS preflight allowed for `http://127.0.0.1:5500`, rejected for other origins.
+
+**Decisions**
+
+- DTOs are Java **records** (immutable, Java writes the accessors). Entities stay plain classes
+  with hand-written getters/setters, as requested.
+- `AuthResponse` = `{token, role, name, id, trainerId, email}`: `id` is the User id, and `trainerId` is
+  added so the trainer dashboard knows its profile id.
+- Login is portal-specific: a trainer account cannot log in through `/api/user/login` and vice versa.
+- Emails are stored lower-case and compared case-insensitively.
+- `JWT_SECRET`, when set, must be at least 32 characters (HS256 requirement); startup fails with a clear message otherwise.
+- New trainers start with `rating = null` (shown as "New") and `verified = false`; seeded trainers are verified.
+- Added a root `.gitattributes` to normalise line endings.
