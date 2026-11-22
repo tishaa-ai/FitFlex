@@ -1,0 +1,37 @@
+# ===== Secrets (NEVER commit these) =====
+.env
+*.env
+!.env.example
+frontend/js/config.js
+
+# ===== Java / Maven =====
+backend/target/
+*.class
+*.log
+hs_err_pid*
+
+# Uploaded trainer files (runtime data, not source code)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ===== IDEs / OS =====
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Node (only if tooling is added later) =====
+node_modules/
