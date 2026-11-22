@@ -155,3 +155,48 @@ download, invalid contact form. Found and fixed one bug: availability was sorted
 - Pose uploads without calories get an estimate of 6 kcal per minute.
 - Extra endpoints beyond the spec: `GET /api/sessions/group`, `DELETE /api/resources/{id}`,
   `DELETE /api/trainer/availability/{id}`.
+
+---
+
+## Phase 4: External APIs (2026-11-22)
+
+**Built**
+
+- **Nutrition** (`NutritionService`, `SpoonacularClient`, `LocalMealDataset`, `NutritionController`):
+  - Mifflin-St Jeor BMR → TDEE (activity factor) → target calories (−500 / +300 / 0, with a 1200 kcal floor).
+  - Spoonacular `mealplanner/generate` plus `recipes/informationBulk` for per-recipe macros. The key
+    is sent in the `x-api-key` header from the backend only.
+  - Fallback: `resources/fallback/meals.json` (41 Indian meals: veg, vegan, eggetarian and non-veg;
+    each meal's macros were checked against its calories) with portion scaling (0.5×–2× in 0.25 steps).
+  - `POST /api/diet/generate`, `GET /api/diet/my`, `GET /api/diet/search-food?query=` (Spoonacular
+    ingredient search, falling back to `fallback/foods.json`, 40 foods per 100 g, plus the meal list).
+- **Gyms** (`GymService`, `GooglePlacesClient`, `OverpassClient`, `NominatimClient`, `GymController`):
+  Google Places API (New) Nearby Search when `GOOGLE_MAPS_API_KEY` is set → OSM Overpass
+  (`leisure=fitness_centre`) → OSM Nominatim name search → empty list with a message. Haversine
+  distance, nearest first, max 30 results, 10-minute in-memory cache.
+- `config/RestClientConfig`: shared `RestClient` with 5 s connect / 10 s read timeouts and an
+  identifying User-Agent.
+
+**Verified (no API keys)**: BMR for the demo user = 1733.75 (hand calculation 10·75.5 + 6.25·175 − 5·24 + 5),
+TDEE 2687.3, target 2187 for weight loss / 2987 for muscle gain. Plans with 3, 4 and 5 meals for all four
+diet types come back as `LOCAL_FALLBACK`, and totals are within about 2% of the target. History and the dashboard's
+latest plan work; bad diet type and 6 meals give 400. Food search for "paneer" returns local results.
+Gyms: during testing the public Overpass servers answered 406/502 or timed out, so the Nominatim
+fallback was added. It returned 7 real gyms within 5 km of Nagpur and 7 within 2 km of Bandra, Mumbai.
+The cached repeat call takes 0.1 s.
+
+**Not verified (needs keys)**: the live Spoonacular and Google Places calls. Both are written against
+the current public API docs and fall back automatically on any error. They'll be unit-tested with
+mocks in Phase 7, and to try them for real you add the keys to `backend/.env`.
+
+**Decisions**
+
+- Eggetarian maps to Spoonacular's `vegetarian` (which allows eggs); non-veg sends no diet filter.
+- Spoonacular's day plan has only 3 meals, so for 4–5 meals/day the snacks come from the local
+  dataset. Each meal has an `origin` field and the plan has a `note`.
+- Calorie split: 3 meals 30/40/30; 4 meals 25/35/10 (snack)/30; 5 meals 25/10/30/10/25.
+- When picking local meals, meals of exactly the chosen diet get a small bonus, so non-veg users also
+  get non-veg dishes, with some randomness among the 3 closest matches.
+- `GET /api/gym/nearby` and `/search-food` return a small wrapper `{source, message, items/gyms}`
+  instead of a bare list, so the UI can show where the data came from.
+- Gender `OTHER` uses the average of the male/female constants (−78) in Mifflin-St Jeor.
