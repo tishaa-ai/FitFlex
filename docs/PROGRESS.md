@@ -352,3 +352,60 @@ mocks in Phase 7, and to try them for real you add the keys to `backend/.env`.
   on the `h2` profile with the demo seed data. Uploads go to `target/test-uploads`.
 - The collection uses two token variables, `{{token}}` (user) and `{{trainerToken}}`, because the API has
   two roles. The Trainer folder's auth is set to `{{trainerToken}}`.
+
+---
+
+## Phase 8: Docs + final check (2026-11-22)
+
+**Built**
+
+- `README.md`: features, tech stack, Mermaid architecture diagram, structure, prerequisites, Windows
+  setup (H2 quick start, MySQL with `.env`, Live Server frontend, pose detection), demo accounts, how to
+  get Spoonacular and Google keys, tests, a troubleshooting table and screenshot placeholders.
+- `docs/LEARNING_GUIDE.md`: big picture (Mermaid), folder-by-folder and file-by-file tour, 4 flows traced
+  with exact file and method names (auth/JWT, booking → confirm → Jitsi, diet plan with fallback, pose →
+  upload), concepts (REST, layers, DTO vs entity, JPA relations, filter chain, JWT, BCrypt, CORS,
+  fetch/async, localStorage, Mifflin-St Jeor, atan2), reading order, 30 viva questions with answers,
+  and future scope.
+- `docs/API.md`: every endpoint with role, request, response, error format and the business rules.
+
+**Final end-to-end check**
+
+- Checked the docs automatically: 270 identifiers mentioned in the docs were looked up in the source.
+  All exist, apart from framework or PowerShell names.
+- **Fresh `git clone`** into an empty folder, following the README: no `.env` and no `config.js` in the
+  repo (secrets not committed). `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=h2"` starts and
+  seeds; copying `config.example.js` → `config.js` and serving `frontend/` on 127.0.0.1:5500 works.
+- Against that clone in headless Chrome: 48 page loads (16 pages × guest/user/trainer) with **0 console
+  errors**, and **21/21 UI flows** passed (register, login, diet plan, book → confirm → Join, group join,
+  workout plan, upload/download, progress charts, contact, mobile menu).
+- Tests: **44 JUnit + 26 pytest, all passing**. Postman collection: 50 requests and 60 assertions passing.
+
+### Definition of done: status
+
+| Item | Status |
+|------|--------|
+| `mvnw spring-boot:run` on the `h2` profile | ✅ verified (also from a fresh clone) |
+| Runs on MySQL | ⚠️ needs your MySQL password in `backend/.env` (not available to me); H2 runs in MySQL mode |
+| Demo user and trainer log in; book → confirm → join link | ✅ verified in the browser |
+| Diet plan generates (fallback) | ✅ |
+| Gym map shows results (OSM fallback) | ✅ (Nominatim fallback when Overpass is busy; can take 10–20 s) |
+| Progress charts render | ✅ |
+| Trainer upload / user download | ✅ |
+| Pose script counts squats/curls, posture feedback, uploads | ✅ logic, detection on photos and upload verified; ⚠️ live webcam not testable here |
+| All JUnit and pytest tests pass | ✅ 44 + 26 |
+| No secrets committed; `.env` and `config.js` gitignored | ✅ |
+
+### What you must do manually
+
+1. **MySQL run:** `Copy-Item backend\.env.example backend\.env`, set `DB_PASSWORD` (and a `JWT_SECRET` of 32+
+   characters), then `.\mvnw.cmd spring-boot:run` from `backend/`.
+2. **Frontend config:** `Copy-Item frontend\js\config.example.js frontend\js\config.js` (one time), then
+   open `frontend/index.html` with VS Code Live Server.
+3. **Pose detection with your webcam:** follow `pose-detection/README.md` (create the Python 3.11 venv,
+   `python pose_detector.py`), and test once with `--upload`.
+4. **Optional keys:** `SPOONACULAR_API_KEY` and `GOOGLE_MAPS_API_KEY` in `backend/.env`, and
+   `GOOGLE_MAPS_BROWSER_KEY` in `frontend/js/config.js`. The live Spoonacular and Google paths are written
+   to the current API docs and unit-tested with mocks, but were never called for real (no keys).
+5. **Postman:** import `docs/FitFlex.postman_collection.json` and run it once in Postman's Collection Runner.
+6. **Screenshots** for the README and the report (`docs/screenshots/`).
