@@ -109,3 +109,49 @@ a trainer calls a USER endpoint; 400 with per-field errors; 409 on duplicate ema
 - `JWT_SECRET`, when set, must be at least 32 characters (HS256 requirement); startup fails with a clear message otherwise.
 - New trainers start with `rating = null` (shown as "New") and `verified = false`; seeded trainers are verified.
 - Added a root `.gitattributes` to normalise line endings.
+
+---
+
+## Phase 3: Core features (2026-11-22)
+
+**Built**
+
+- **Trainers**: public `GET /api/trainers` (filters: specialization, minExperience, maxPrice, search
+  by name) and `GET /api/trainers/{id}` with availability; trainer's own `GET/PUT /api/trainer/profile`,
+  `GET/POST /api/trainer/availability`, `DELETE /api/trainer/availability/{id}`, `GET /api/trainer/clients`.
+- **Sessions** (`SessionService`): `POST /book` (future time, inside a weekly slot, same day, no
+  overlap with the trainer's REQUESTED/CONFIRMED sessions), `POST /group`, `GET /group` (open group
+  classes), `POST /{id}/join` (confirmed, upcoming, not full, not already joined),
+  `GET /my?filter=upcoming|past`, `PUT /{id}/status`. Confirming creates
+  `https://meet.jit.si/FitFlex-<uuid>`.
+- **Workout plans**: `POST /api/workout-plans` (only for the trainer's own clients; nested
+  validation of exercise rows), `GET /api/workout-plans/my` for both roles.
+- **Resources**: multipart upload (mp4/pdf/docx/jpg/png, 50 MB, file names sanitised, stored under
+  a UUID name in `uploads/`), `GET /my`, permission-checked `GET /{id}/download`, `DELETE /{id}`.
+- **Progress**: `POST /api/progress`, `POST /api/progress/pose`, `GET /my?from=&to=`, `GET /summary`
+  (streak, workouts, minutes, calories, weight change, pose sessions/reps, average form %).
+- **Contact** (`POST /api/contact`, public) and **dashboards** (`GET /api/dashboard/user`,
+  `GET /api/dashboard/trainer`).
+
+**Verified**: about 60 curl checks against the H2 profile (script in my scratchpad), covering
+happy paths plus 400/403/404/409 cases: booking clash, outside availability, past time, wrong role,
+other trainer's session/slot/file, full group, duplicate join, disallowed file type, non-client
+download, invalid contact form. Found and fixed one bug: availability was sorted alphabetically
+(FRIDAY before MONDAY) because `dayOfWeek` is stored as text, so it is now sorted in Java with
+`AvailabilitySlot.WEEK_ORDER`.
+
+**Decisions**
+
+- "Client of a trainer" = has a non-cancelled one-on-one with them, or joined one of their group sessions.
+- Group sessions are CONFIRMED (with a link) as soon as the trainer creates them, and they don't need
+  to fit inside availability slots.
+- A USER "cancelling" a group session means leaving it (they are removed from the participants);
+  the class itself stays on.
+- A trainer can mark a session COMPLETED only once it has started.
+- The meeting link is only sent to the trainer, the booking user and participants, and only while
+  the session is CONFIRMED.
+- One-on-one duration defaults to 60 min (30–120 allowed); group sessions can be 15–180 min.
+- Logging today's weight also updates the profile weight, so the next diet plan uses current data.
+- Pose uploads without calories get an estimate of 6 kcal per minute.
+- Extra endpoints beyond the spec: `GET /api/sessions/group`, `DELETE /api/resources/{id}`,
+  `DELETE /api/trainer/availability/{id}`.

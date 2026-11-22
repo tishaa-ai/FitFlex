@@ -9,7 +9,7 @@ import java.util.List;
 /** Database access for trainers' weekly {@link AvailabilitySlot}s. */
 public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySlot, Long> {
 
-    List<AvailabilitySlot> findByTrainerIdOrderByDayOfWeekAscStartTimeAsc(Long trainerId);
+    List<AvailabilitySlot> findByTrainerId(Long trainerId);
 
     List<AvailabilitySlot> findByTrainerIdAndDayOfWeek(Long trainerId, DayOfWeek dayOfWeek);
 }

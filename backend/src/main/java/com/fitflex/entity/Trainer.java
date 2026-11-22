@@ -46,7 +46,6 @@ public class Trainer {
 
     /** Weekly time windows in which users may book this trainer. */
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("dayOfWeek ASC, startTime ASC")
     private List<AvailabilitySlot> availability = new ArrayList<>();
 
     // ----- getters and setters -----
