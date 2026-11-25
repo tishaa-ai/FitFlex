@@ -201,6 +201,10 @@ Created automatically when the database is empty (`DataSeeder`):
 The seed also creates sessions (confirmed, requested, completed and two group classes), a workout plan and
 28 days of progress entries, including pose detection sessions.
 
+**Before a demo:** start the backend once while online. It searches Nagpur in the background (see the log line
+`Gym warm-up for the default city`) and saves the results, so `gyms.html` works even if the map services, or the
+internet, are down later. Also open any other city you plan to show once beforehand.
+
 **Try the full flow:** log in as the user → Trainers → Arjun → book a Monday slot → log out → log in at
 `trainer-login.html` as trainer1 → Confirm the request → log back in as the user → Sessions → **Join Session**.
 
@@ -241,7 +245,7 @@ cd ..\pose-detection
 | Console: `config.js 404` | You skipped `Copy-Item frontend\js\config.example.js frontend\js\config.js`. |
 | Logged out after restarting the backend | Set `JWT_SECRET` in `.env` (otherwise a new random key is used each start). |
 | `JWT_SECRET must be at least 32 characters` | Use a longer secret (see the PowerShell one-liner above). |
-| Gym search slow or empty | The free OpenStreetMap servers can be busy; FitFlex falls back automatically, so wait up to 20 s or try a bigger radius. |
+| Gym search slow or empty | The free OpenStreetMap servers are often busy. FitFlex asks 4 Overpass mirrors at once, retries, falls back to Nominatim, widens to 10 km if nothing is close, and finally shows the last **saved** results (`backend/data/gym-cache.json`). A search can take up to ~30 s when Overpass is down. A place you have never searched while online cannot be shown offline. |
 | Diet plan says *complete your profile* | The user needs age, gender, height, weight and activity level (edit with `PUT /api/user/profile`). |
 | Pose detector problems | See [pose-detection/README.md](pose-detection/README.md#5-troubleshooting). |
 | `mvnw.cmd` is not recognized | Run it from inside `backend/` and write `.\mvnw.cmd`. |

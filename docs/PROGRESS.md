@@ -409,3 +409,47 @@ mocks in Phase 7, and to try them for real you add the keys to `backend/.env`.
    to the current API docs and unit-tested with mocks, but were never called for real (no keys).
 5. **Postman:** import `docs/FitFlex.postman_collection.json` and run it once in Postman's Collection Runner.
 6. **Screenshots** for the README and the report (`docs/screenshots/`).
+
+---
+
+## Change: more reliable gym search (2026-11-25)
+
+**Problem reported:** on gyms.html, Nagpur showed 0 gyms because the Overpass API was busy.
+
+**What I found:** at test time all five public Overpass mirrors were failing (4 timed out or refused,
+one gave "504 at capacity"), so a retry or one extra mirror alone would not have helped. The Nominatim
+fallback did work, but it finds only named gyms, and the nearest one is 3.2 km from Nagpur's centre, so
+**3 km gave 0 results after 13 s**. 5 km gave 7 and 10 km gave 16.
+
+**Changes**
+
+- `OverpassClient`: 4 mirrors (`fitflex.overpass.urls`) are queried **in parallel**
+  (`ExecutorService.invokeAny`, so the first good answer wins). Each mirror is retried once on 429/502/503/504,
+  timeouts or connection errors. A "200 OK" body with a runtime-error `remark` counts as a failure. It has its
+  own `overpassRestClient` with a 25 s read timeout and a 30 s overall deadline (`fitflex.overpass.deadline-seconds`).
+- `GymService`:
+  - **circuit breaker:** after Overpass fails it is skipped for 3 minutes, so later searches go straight to Nominatim (about 2 s, not 30 s);
+  - **auto-widen:** if nothing is within the radius, it returns the nearest 10 within 10 km and says so;
+  - the in-memory cache now lasts 1 hour;
+  - **saved results:** if every provider fails, it returns the last saved results for that spot (`source: SAVED`, with the date);
+  - **startup warm-up:** it searches the default city (Nagpur, 10 km) in the background unless it has fresh saved data.
+- New `GymCacheStore`: saves good results to `backend/data/gym-cache.json` (gitignored), using an atomic write
+  through a temp file. It is reloaded on start.
+- `gyms.js`: label for saved results and an honest loading message (up to 30 s).
+- Tests: `OverpassClientTest` (6, against a fake local HTTP server: busy mirror, flaky mirror retried,
+  remark error, all failing, deadline, fast mirror beats slow) and `GymServiceTest` (6: filtering/sorting,
+  Nominatim fallback + circuit breaker, widening to 10 km, saved results after a "restart", nothing saved,
+  memory cache). Integration tests turn warm-up off and use `target/` for the cache file.
+
+**Verified**
+
+- `mvnw.cmd test`: **56 tests, 0 failures** (12 new). Mutation check: switching off retries, the circuit
+  breaker or the widening each made the matching test fail; the code was restored.
+- Live (with Overpass actually down): warm-up saved 16 Nagpur gyms. Nagpur 3 km → 10 gyms in 1.8 s
+  (nearest within 10 km), 5 km → 7, 10 km → 16, 2 km → 10.
+- Simulated total outage (all map URLs pointing to a dead port, after a restart): Nagpur 3/10/2 km →
+  `SAVED` results with the date. A never-searched city (Pune) → an honest "unavailable" message.
+  Checked gyms.html in Chrome: pins, list and message render; still 0 console errors on all 48 page loads.
+
+**Limits:** when Overpass is down the results come from Nominatim, which finds only named gyms (fewer than
+Overpass). A city that was never searched online cannot be shown offline.

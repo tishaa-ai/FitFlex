@@ -124,7 +124,9 @@ Maths: BMR (Mifflin-St Jeor) → TDEE = BMR × activity factor → target = TDEE
 
 | Method | Path | Role | Request | Response |
 |--------|------|------|---------|----------|
-| GET | `/gym/nearby?lat=21.1458&lng=79.0882&radius=3000` | Public | radius 200-20000 m, default 3000 | `{source (GOOGLE_PLACES/OPENSTREETMAP/NONE), message, gyms: [{name, address, lat, lng, rating, distanceKm, directionsUrl}]}` nearest first |
+| GET | `/gym/nearby?lat=21.1458&lng=79.0882&radius=3000` | Public | radius 200-20000 m, default 3000 | `{source (GOOGLE_PLACES/OPENSTREETMAP/SAVED/NONE), message, gyms: [{name, address, lat, lng, rating, distanceKm, directionsUrl}]}` nearest first |
+
+Gym search order: Google Places (if a key is set) → Overpass (4 mirrors queried in parallel, each retried once, 30 s deadline) → Nominatim. If nothing is within the radius, the nearest 10 within 10 km are returned (with a `message`). If every live provider fails, the last results saved for that spot (`backend/data/gym-cache.json`) are returned with `source: SAVED` and their date.
 
 ## Progress
 

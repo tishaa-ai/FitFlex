@@ -76,13 +76,19 @@ async function search() {
   const count = document.getElementById("gym-count");
   const note = document.getElementById("source-note");
   count.textContent = "Gyms";
-  ui.showLoader(list, "Searching nearby gyms (this can take a few seconds)...");
+  // The free map servers can be slow; the backend tries several and answers within ~30 s at most.
+  ui.showLoader(list, "Searching nearby gyms (the free map servers can take up to 30 seconds)...");
   mapAdapter.setCenter(lat, lng, radius);
 
   try {
     const data = await api.get("/gym/nearby" + api.query({ lat, lng, radius }));
-    const sourceLabel = { GOOGLE_PLACES: "Google Places", OPENSTREETMAP: "OpenStreetMap", NONE: "no provider" }[data.source] || data.source;
-    note.textContent = `Results from ${sourceLabel} within ${radius / 1000} km.`;
+    const sourceLabel = {
+      GOOGLE_PLACES: "Google Places",
+      OPENSTREETMAP: "OpenStreetMap",
+      SAVED: "saved OpenStreetMap data", // every live service was down; see data.message for the date
+      NONE: "no provider",
+    }[data.source] || data.source;
+    note.textContent = `Results from ${sourceLabel}, searching within ${radius / 1000} km.`;
     count.textContent = `${data.gyms.length} gym${data.gyms.length === 1 ? "" : "s"} found`;
 
     const message = data.message ? `<div class="alert alert-warning"><i class="fa-solid fa-circle-info"></i><div>${ui.escape(data.message)}</div></div>` : "";

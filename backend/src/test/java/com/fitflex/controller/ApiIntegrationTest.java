@@ -33,7 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * JPA) runs against the in-memory H2 database with the demo seed data. MockMvc sends fake HTTP
  * requests without starting a real server.
  */
-@SpringBootTest(properties = "fitflex.upload.dir=target/test-uploads")
+@SpringBootTest(properties = {"fitflex.upload.dir=target/test-uploads",
+        "fitflex.gym.warm-up=false", "fitflex.gym.cache-file=target/test-gym-cache.json"})
 @AutoConfigureMockMvc
 @ActiveProfiles("h2")
 class ApiIntegrationTest {
